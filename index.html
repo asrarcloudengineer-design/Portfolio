@@ -42,7 +42,8 @@
         /* 3D Carousel Styles */
         .scene {
             perspective: 1000px;
-            height: 500px;
+            /* Adjusted height for better 17-item visibility */
+            height: 550px; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -187,62 +188,91 @@
 
     <!-- LOGIC -->
     <script>
+        // Utility function to convert filename (e.g., 'rex.jpg') to a clean title (e.g., 'Rex')
+        function filenameToTitle(filename) {
+            if (!filename) return "Untitled";
+            // 1. Remove the extension (.jpg, .png, etc.)
+            const nameWithoutExt = filename.substring(0, filename.lastIndexOf('.'));
+            // 2. Capitalize the first letter
+            return nameWithoutExt.charAt(0).toUpperCase() + nameWithoutExt.slice(1);
+        }
+
         // --- 1. CONFIGURATION ---
-        // *** IMPORTANT: The path is now set to 'assets/' ***
-        // Ensure ALL your images are in a folder named 'assets' in your GitHub repo.
-        const portfolioItems = [
-            // Ensure these filenames match the case of the files you uploaded to the 'assets' folder
-            { src: "assets/1000116579.jpg", title: "Eco-Moto", category: "Sketch" },
-            { src: "assets/1000098044.jpg", title: "Triatek", category: "Concept" },
-            { src: "assets/1000116849.jpg", title: "Azure GT", category: "Auto Design" },
-            { src: "assets/1000115233.jpg", title: "Urban Pod", category: "3D Model" },
-            { src: "assets/1000116364.jpg", title: "Aero-Heli", category: "Sketch" },
-            { src: "assets/1000006570.jpg", title: "Sedan Top", category: "Render" },
-            { src: "assets/1000008975.jpg", title: "Streamliner", category: "Concept" },
-            { src: "assets/1000113461.jpg", title: "Heavy Rover", category: "3D Model" },
-            { src: "assets/1000115788.jpg", title: "Sky Skimmer", category: "Vehicle" },
-            { src: "assets/1000116672.jpg", title: "Moto Detail", category: "Sketch" }
+        // Contains all 17 file names. The titles are now generated automatically.
+        const fileNames = [
+            "rex.jpg", "flx.jpg", "imagine.jpg", "hlct.jpg", "mtrnd.jpg", "a.jpg", 
+            "b.jpg", "camper.jpg", "cdr.jpg", "veyra.jpg", "mcw.jpg", "vrx.jpg", 
+            "hlcts.jpg", "dxy.jpg", "star.jpg", "ctdr.jpg", "xoxo.jpg"
         ];
+        
+        // Map the filenames to the final portfolio items, generating the title automatically
+        const portfolioItems = fileNames.map((name, index) => {
+            const categoryMap = [
+                "Vehicle", "Concept", "3D Model", "Sketch", "Render", "WIP", 
+                "WIP", "Auto Design", "Heavy Vehicle", "Auto Design", "Aerospace", 
+                "Vehicle", "Sketch", "Concept", "Vehicle", "3D Model", "Render"
+            ];
+            
+            return {
+                src: "assets/" + name,
+                title: filenameToTitle(name),
+                category: categoryMap[index] || "Design"
+            };
+        });
+
 
         // --- 2. SETUP CAROUSEL ---
         const carousel = document.getElementById('carousel');
         const numberOfCells = portfolioItems.length;
         let cellWidth = 280; 
-        let radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 50; 
+        
+        // Dynamic radius calculation for 17 items 
+        let radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 100; 
         
         if (window.innerWidth < 600) {
-            radius = 280;
+            radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 70;
+            if (radius < 250) radius = 250;
         }
 
         let currentAngle = 0;
         const theta = 360 / numberOfCells;
 
         // Generate Cards
-        portfolioItems.forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = 'carousel-card group';
-            
-            const cellAngle = theta * index;
-            card.style.transform = `rotateY(${cellAngle}deg) translateZ(${radius}px)`;
+        if (numberOfCells > 0) {
+            portfolioItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'carousel-card group';
+                
+                const cellAngle = theta * index;
+                card.style.transform = `rotateY(${cellAngle}deg) translateZ(${radius}px)`;
 
-            card.innerHTML = `
-                <div class="relative w-full h-full bg-gray-800">
-                    <img src="${item.src}" 
-                         alt="${item.title}" 
-                         onerror="handleImageError(this, '${item.src}')" 
-                         class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                    
-                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6">
-                        <span class="text-cyan-400 text-xs font-bold tracking-wider uppercase mb-1 translate-y-4 group-hover:translate-y-0 transition-transform">${item.category}</span>
-                        <h3 class="text-white text-xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform delay-75">${item.title}</h3>
+                card.innerHTML = `
+                    <div class="relative w-full h-full bg-gray-800">
+                        <img src="${item.src}" 
+                             alt="${item.title}" 
+                             onerror="handleImageError(this, '${item.src}')" 
+                             class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                        
+                        <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6">
+                            <span class="text-cyan-400 text-xs font-bold tracking-wider uppercase mb-1 translate-y-4 group-hover:translate-y-0 transition-transform">${item.category}</span>
+                            <h3 class="text-white text-xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform delay-75">${item.title}</h3>
+                        </div>
                     </div>
+                `;
+                carousel.appendChild(card);
+            });
+        } else {
+            // Fallback message if for some reason the array is empty
+            carousel.innerHTML = `
+                <div class="text-center p-8 bg-black/50 rounded-lg border border-white/10 max-w-md mx-auto">
+                    <i data-lucide="image-off" class="w-8 h-8 text-red-500 mx-auto mb-4"></i>
+                    <p class="text-white font-bold">No Images Defined</p>
+                    <p class="text-sm text-gray-400 mt-2">The list of portfolio items is currently empty. Please check the JavaScript configuration.</p>
                 </div>
             `;
-            carousel.appendChild(card);
-        });
+        }
 
         // --- 3. ERROR HANDLING LOGIC ---
-        // This function displays a helpful error message if an image fails to load.
         function handleImageError(imgElement, filepath) {
             console.error(`Image failed to load: ${filepath}. Check case sensitivity and file path.`);
             
@@ -277,8 +307,14 @@
 
         // Handle Window Resize (recalculate radius)
         window.addEventListener('resize', () => {
-            if (window.innerWidth < 600) radius = 280;
-            else radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 50;
+            if (window.innerWidth < 600) {
+                // Recalculate mobile radius
+                radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 70;
+                if (radius < 250) radius = 250;
+            } else {
+                // Recalculate desktop radius
+                radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 100;
+            }
             
             // Re-apply transforms to cards
             const cards = document.querySelectorAll('.carousel-card');
