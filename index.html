@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asrar | Automotive & Concept Design</title>
+    
+    <!-- Tailwind CSS (Styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config for Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyan: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+
+        body {
+            background-color: #000;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* 3D Carousel Styles */
+        .scene {
+            perspective: 1000px;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        .carousel {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .carousel-card {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 280px; 
+            height: 380px; 
+            margin-left: -140px; /* Half width to center */
+            margin-top: -190px; /* Half height to center */
+            border-radius: 1rem;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            /* Backface visibility: hidden makes back of cards invisible, 
+               but visible looks cool for glass effect */
+            backface-visibility: hidden; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: opacity 0.3s;
+        }
+
+        /* Gradient Overlay for Text Readability */
+        .card-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+        }
+
+        /* Hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md bg-black/50 border-b border-white/10">
+        <div class="text-xl font-black tracking-tighter">ASRAR<span class="text-cyan-400">.DESIGN</span></div>
+        <div class="flex gap-4">
+            <a href="mailto:contact@asrar.design" class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold hover:bg-cyan-400 transition">HIRE ME</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+        <!-- Background Glows -->
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-600 rounded-full filter blur-[100px] opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-600 rounded-full filter blur-[100px] opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+
+        <div class="relative z-10 space-y-6">
+            <h2 class="text-cyan-400 text-xs md:text-sm tracking-[0.4em] uppercase font-bold">Concept Artist & 3D Modeler</h2>
+            <h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter leading-none">
+                ASRAR
+            </h1>
+            <p class="text-gray-400 max-w-md mx-auto text-sm md:text-base leading-relaxed">
+                Transforming imagination into digital reality through high-fidelity sketches, 3D miniatures, and automotive concepts.
+            </p>
+            
+            <button onclick="document.getElementById('work').scrollIntoView({behavior: 'smooth'})" class="mt-8 px-8 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 text-sm tracking-widest uppercase">
+                View Gallery
+            </button>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 animate-bounce text-white/30">
+            <i data-lucide="chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- About / Skills Section -->
+    <section class="py-20 bg-neutral-900/30 border-t border-white/5">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="p-6 bg-black border border-white/10 rounded-2xl">
+                    <div class="mx-auto w-12 h-12 bg-cyan-900/30 text-cyan-400 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="pen-tool"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Digital Sketching</h3>
+                    <p class="text-gray-500 text-sm">Rapid ideation and high-fidelity rendering for automotive concepts.</p>
+                </div>
+                <div class="p-6 bg-black border border-white/10 rounded-2xl">
+                    <div class="mx-auto w-12 h-12 bg-purple-900/30 text-purple-400 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="box"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">3D Modeling</h3>
+                    <p class="text-gray-500 text-sm">Expert Blender workflow for hard-surface and miniature design.</p>
+                </div>
+                <div class="p-6 bg-black border border-white/10 rounded-2xl">
+                    <div class="mx-auto w-12 h-12 bg-green-900/30 text-green-400 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="cpu"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Miniature Design</h3>
+                    <p class="text-gray-500 text-sm">Scaling complex vehicles into printable, collectible formats.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Carousel Section -->
+    <section id="work" class="min-h-screen relative flex flex-col items-center justify-center py-20 overflow-hidden bg-[#050505]">
+        <div class="mb-12 text-center z-10 px-4">
+            <h2 class="text-4xl font-bold text-white mb-2">Selected Works</h2>
+            <p class="text-gray-500 text-sm">Tap arrows to rotate</p>
+        </div>
+
+        <!-- The 3D Scene -->
+        <div class="scene w-full max-w-4xl">
+            <div class="carousel" id="carousel">
+                <!-- Javascript will inject cards here -->
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex gap-8 mt-12 z-20">
+            <button onclick="rotateCarousel(-1)" class="w-14 h-14 rounded-full border border-white/20 bg-black text-white flex items-center justify-center hover:bg-cyan-500 hover:border-cyan-500 hover:text-black transition-all shadow-lg active:scale-95">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <button onclick="rotateCarousel(1)" class="w-14 h-14 rounded-full border border-white/20 bg-black text-white flex items-center justify-center hover:bg-cyan-500 hover:border-cyan-500 hover:text-black transition-all shadow-lg active:scale-95">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/10 text-center text-gray-600 text-sm">
+        <p>© 2024 Asrar Design. All rights reserved.</p>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        // --- 1. CONFIGURATION ---
+        // These match the filenames you uploaded.
+        const portfolioItems = [
+            { src: "1000116579.jpg", title: "Eco-Moto", category: "Sketch" },
+            { src: "1000098044.jpg", title: "Triatek", category: "Concept" },
+            { src: "1000116849.jpg", title: "Azure GT", category: "Auto Design" },
+            { src: "1000115233.jpg", title: "Urban Pod", category: "3D Model" },
+            { src: "1000116364.jpg", title: "Aero-Heli", category: "Sketch" },
+            { src: "1000006570.jpg", title: "Sedan Top", category: "Render" },
+            { src: "1000008975.jpg", title: "Streamliner", category: "Concept" },
+            { src: "1000113461.jpg", title: "Heavy Rover", category: "3D Model" },
+            { src: "1000115788.jpg", title: "Sky Skimmer", category: "Vehicle" },
+            { src: "1000116672.jpg", title: "Moto Detail", category: "Sketch" }
+        ];
+
+        // --- 2. SETUP CAROUSEL ---
+        const carousel = document.getElementById('carousel');
+        const numberOfCells = portfolioItems.length;
+        let cellWidth = 280; // Match CSS width
+        let radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 50; // +50 for spacing
+        
+        // On mobile, reduce radius slightly so it doesn't clip
+        if (window.innerWidth < 600) {
+            radius = 280;
+        }
+
+        let currentAngle = 0;
+        const theta = 360 / numberOfCells;
+
+        // Generate Cards
+        portfolioItems.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'carousel-card group';
+            
+            // Position the card in 3D space
+            const cellAngle = theta * index;
+            card.style.transform = `rotateY(${cellAngle}deg) translateZ(${radius}px)`;
+
+            card.innerHTML = `
+                <div class="relative w-full h-full bg-gray-800">
+                    <img src="${item.src}" alt="${item.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <span class="text-cyan-400 text-xs font-bold tracking-wider uppercase mb-1 translate-y-4 group-hover:translate-y-0 transition-transform">${item.category}</span>
+                        <h3 class="text-white text-xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform delay-75">${item.title}</h3>
+                    </div>
+                </div>
+            `;
+            carousel.appendChild(card);
+        });
+
+        // --- 3. ROTATION LOGIC ---
+        function rotateCarousel(direction) {
+            // direction: 1 for next, -1 for prev
+            currentAngle += theta * direction * -1;
+            carousel.style.transform = `translateZ(-${radius}px) rotateY(${currentAngle}deg)`;
+        }
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Initial setup to push carousel back
+        carousel.style.transform = `translateZ(-${radius}px) rotateY(0deg)`;
+
+        // Handle Window Resize (recalculate radius)
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 600) radius = 280;
+            else radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 50;
+            
+            // Re-apply transforms to cards
+            const cards = document.querySelectorAll('.carousel-card');
+            cards.forEach((card, index) => {
+                const cellAngle = theta * index;
+                card.style.transform = `rotateY(${cellAngle}deg) translateZ(${radius}px)`;
+            });
+            // Re-center carousel
+            carousel.style.transform = `translateZ(-${radius}px) rotateY(${currentAngle}deg)`;
+        });
+
+    </script>
+</body>
+</html>
