@@ -69,8 +69,6 @@
             background: rgba(20, 20, 20, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
-            /* Backface visibility: hidden makes back of cards invisible, 
-               but visible looks cool for glass effect */
             backface-visibility: hidden; 
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             transition: opacity 0.3s;
@@ -81,13 +79,14 @@
             background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
         }
 
-        /* Hide scrollbar */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .broken-img {
+            background-color: #3f3f46; /* Gray-700 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 1rem;
         }
     </style>
 </head>
@@ -189,27 +188,28 @@
     <!-- LOGIC -->
     <script>
         // --- 1. CONFIGURATION ---
-        // These match the filenames you uploaded.
+        // *** IMPORTANT: The path is now set to 'assets/' ***
+        // Ensure ALL your images are in a folder named 'assets' in your GitHub repo.
         const portfolioItems = [
-            { src: "1000116579.jpg", title: "Eco-Moto", category: "Sketch" },
-            { src: "1000098044.jpg", title: "Triatek", category: "Concept" },
-            { src: "1000116849.jpg", title: "Azure GT", category: "Auto Design" },
-            { src: "1000115233.jpg", title: "Urban Pod", category: "3D Model" },
-            { src: "1000116364.jpg", title: "Aero-Heli", category: "Sketch" },
-            { src: "1000006570.jpg", title: "Sedan Top", category: "Render" },
-            { src: "1000008975.jpg", title: "Streamliner", category: "Concept" },
-            { src: "1000113461.jpg", title: "Heavy Rover", category: "3D Model" },
-            { src: "1000115788.jpg", title: "Sky Skimmer", category: "Vehicle" },
-            { src: "1000116672.jpg", title: "Moto Detail", category: "Sketch" }
+            // Ensure these filenames match the case of the files you uploaded to the 'assets' folder
+            { src: "assets/1000116579.jpg", title: "Eco-Moto", category: "Sketch" },
+            { src: "assets/1000098044.jpg", title: "Triatek", category: "Concept" },
+            { src: "assets/1000116849.jpg", title: "Azure GT", category: "Auto Design" },
+            { src: "assets/1000115233.jpg", title: "Urban Pod", category: "3D Model" },
+            { src: "assets/1000116364.jpg", title: "Aero-Heli", category: "Sketch" },
+            { src: "assets/1000006570.jpg", title: "Sedan Top", category: "Render" },
+            { src: "assets/1000008975.jpg", title: "Streamliner", category: "Concept" },
+            { src: "assets/1000113461.jpg", title: "Heavy Rover", category: "3D Model" },
+            { src: "assets/1000115788.jpg", title: "Sky Skimmer", category: "Vehicle" },
+            { src: "assets/1000116672.jpg", title: "Moto Detail", category: "Sketch" }
         ];
 
         // --- 2. SETUP CAROUSEL ---
         const carousel = document.getElementById('carousel');
         const numberOfCells = portfolioItems.length;
-        let cellWidth = 280; // Match CSS width
-        let radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 50; // +50 for spacing
+        let cellWidth = 280; 
+        let radius = Math.round( ( cellWidth / 2 ) / Math.tan( Math.PI / numberOfCells ) ) + 50; 
         
-        // On mobile, reduce radius slightly so it doesn't clip
         if (window.innerWidth < 600) {
             radius = 280;
         }
@@ -222,13 +222,16 @@
             const card = document.createElement('div');
             card.className = 'carousel-card group';
             
-            // Position the card in 3D space
             const cellAngle = theta * index;
             card.style.transform = `rotateY(${cellAngle}deg) translateZ(${radius}px)`;
 
             card.innerHTML = `
                 <div class="relative w-full h-full bg-gray-800">
-                    <img src="${item.src}" alt="${item.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <img src="${item.src}" 
+                         alt="${item.title}" 
+                         onerror="handleImageError(this, '${item.src}')" 
+                         class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    
                     <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6">
                         <span class="text-cyan-400 text-xs font-bold tracking-wider uppercase mb-1 translate-y-4 group-hover:translate-y-0 transition-transform">${item.category}</span>
                         <h3 class="text-white text-xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform delay-75">${item.title}</h3>
@@ -238,9 +241,30 @@
             carousel.appendChild(card);
         });
 
-        // --- 3. ROTATION LOGIC ---
+        // --- 3. ERROR HANDLING LOGIC ---
+        // This function displays a helpful error message if an image fails to load.
+        function handleImageError(imgElement, filepath) {
+            console.error(`Image failed to load: ${filepath}. Check case sensitivity and file path.`);
+            
+            const parent = imgElement.parentNode;
+            imgElement.remove(); // Remove the broken <img> tag
+            
+            // Create a placeholder div
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'broken-img w-full h-full';
+            errorDiv.innerHTML = `
+                <i data-lucide="alert-triangle" class="w-8 h-8 text-red-400 mb-2"></i>
+                <span class="text-sm text-red-300">Image Error</span>
+                <span class="text-xs text-gray-400 pt-1">Missing file: </span>
+                <span class="text-xs text-gray-400 break-all">${filepath}</span>
+            `;
+            parent.prepend(errorDiv);
+            lucide.createIcons();
+        }
+
+
+        // --- 4. ROTATION LOGIC ---
         function rotateCarousel(direction) {
-            // direction: 1 for next, -1 for prev
             currentAngle += theta * direction * -1;
             carousel.style.transform = `translateZ(-${radius}px) rotateY(${currentAngle}deg)`;
         }
@@ -269,3 +293,4 @@
     </script>
 </body>
 </html>
+
